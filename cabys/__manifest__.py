@@ -6,7 +6,9 @@
     'website': "https://github.com/odoocr/cabys",
     'category': 'Account',
     'version': '17.0.1.0.0',
-    'license': 'OPL-1',
+    'license': 'AGPL-3',
+    'price': 0,
+    'currency': 'USD',
     'depends': [
         'base',
         'account',
