@@ -1,5 +1,5 @@
 {
-    'name': "Catálogo de bienes y servicios para uso tributario y Cuentas Nacionales",
+    'name': "Costa Rica -Catálogo de bienes y servicios para uso tributario y Cuentas Nacionales",
 
     'summary': "Catálogo de bienes y servicios para uso tributario y Cuentas Nacionales",
     'author': 'info@fakturacion.com | Singulary | Fabian Artavia',
