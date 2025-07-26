@@ -24,4 +24,3 @@ from . import account_tax
 from . import economic_activity
 from . import qr_generator
 from . import invoice_qr_fields
-from . import discount_code

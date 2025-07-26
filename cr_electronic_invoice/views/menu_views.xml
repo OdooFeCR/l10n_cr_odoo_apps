@@ -9,5 +9,4 @@
     <menuitem id="menu_code_type_product" name="Code types (Products)" parent="menu_electronic_invoice" sequence="6" action="action_code_type_product"/>
     <menuitem id="menu_identification_type" name="Identification type" parent="menu_electronic_invoice" sequence="7" action="action_identification_type"/>
     <menuitem id="menu_economic_activity" name="Economic activity" parent="menu_electronic_invoice" sequence="8" action="action_economic_activity"/>
-    <menuitem id="menu_discount_code" name="Discount Code" parent="menu_electronic_invoice" sequence="9" action="action_discount_code"/>
 </odoo>

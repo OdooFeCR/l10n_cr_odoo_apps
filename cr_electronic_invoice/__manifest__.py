@@ -1,11 +1,9 @@
-# -*- coding: utf-8 -*-
+
 {
     'name': 'Facturación electrónica Costa Rica',
     'version': '17.0.0.0.0',
     'author': 'Singulary',
     'license': 'AGPL-3',
-    'price': 0,
-    'currency': 'USD',
     'website': 'https://singulary.online',
     'category': 'Accounting/Accounting',
     'description':
@@ -44,7 +42,6 @@
         'data/sequence.xml',
         'data/res.currency.xml',
         'data/decimal_precision.xml',
-        'data/discount_code_data.xml',
         'views/uom_views.xml',
         'views/account_move_views.xml',
         'views/account_journal_views.xml',
@@ -60,7 +57,6 @@
         'views/sale_condition_views.xml',
         'views/account_tax_views.xml',
         'views/economic_activity_views.xml',
-        'views/discount_code_views.xml',
         'views/menu_views.xml',
         'views/account_move_reversal_views.xml',
         'views/report_invoice.xml',

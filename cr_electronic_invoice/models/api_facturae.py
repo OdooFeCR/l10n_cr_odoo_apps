@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import requests
 import datetime
 import json
@@ -22,7 +21,7 @@ from odoo.exceptions import UserError
 from xml.sax.saxutils import escape
 from ..xades.context2 import XAdESContext2, PolicyId2, create_xades_epes_signature
 from lxml import etree
-from html import escape  # escapes &, <, > … for XML safety
+
 
 
 # PARA VALIDAR JSON DE RESPUESTA
@@ -396,7 +395,7 @@ def gen_xml_v43(inv, sale_conditions, total_servicio_gravado,
                if inv.company_id.invoice_provider_type == 'external'
                else inv.company_id.vat) + '</ProveedorSistemas>')
     sb.append('<CodigoActividadEmisor>' + str(inv.company_id.activity_id.code) + '</CodigoActividadEmisor>')
-    if inv.tipo_documento in ["FE","FEC","NC","ND"] and inv.partner_id.activity_id.code:
+    if inv.tipo_documento in ["FE","FEC","NC","ND"]:
         sb.append('<CodigoActividadReceptor>' + str(inv.partner_id.activity_id.code) + '</CodigoActividadReceptor>')
     sb.append('<NumeroConsecutivo>' + inv.number_electronic[21:41] + '</NumeroConsecutivo>')
     sb.append('<FechaEmision>' + inv.date_issuance + '</FechaEmision>')
@@ -412,13 +411,8 @@ def gen_xml_v43(inv, sale_conditions, total_servicio_gravado,
     sb.append('<Canton>' + str(issuing_company.county_id.code) + '</Canton>')
     sb.append('<Distrito>' + str(issuing_company.district_id.code) + '</Distrito>')
 
-    # --- Issuer ---
     if issuing_company.neighborhood_id and issuing_company.neighborhood_id.code:
-        neighborhood_value = normalize_neighborhood(
-            issuing_company.neighborhood_id.name
-        )
-        if neighborhood_value:
-            sb.append(f"<Barrio>{neighborhood_value}</Barrio>")
+        sb.append('<Barrio>' + str(issuing_company.neighborhood_id.name or '') + '</Barrio>')
 
     sb.append('<OtrasSenas>' + escape(str(issuing_company.street or 'No disponible')) + '</OtrasSenas>')
     sb.append('</Ubicacion>')
@@ -433,7 +427,7 @@ def gen_xml_v43(inv, sale_conditions, total_servicio_gravado,
     sb.append('<CorreoElectronico>' + str(issuing_company.email) + '</CorreoElectronico>')
     sb.append('</Emisor>')
 
-    if inv.tipo_documento == 'TE' or (inv.tipo_documento == 'NC' and inv.reference_document_id.code == '04'):
+    if inv.tipo_documento == 'TE' or (inv.tipo_documento == 'NC' and not receiver_company.vat):
         pass
     else:
         vat = re.sub('[^0-9]', '', receiver_company.vat)
@@ -452,11 +446,15 @@ def gen_xml_v43(inv, sale_conditions, total_servicio_gravado,
         if receiver_company.name:
             sb.append('<Receptor>')
             sb.append('<Nombre>' + escape(str(receiver_company.name[:99])) + '</Nombre>')
-            sb.append('<Identificacion>')
-            sb.append('<Tipo>' + str(id_code) + '</Tipo>')
-            sb.append('<Numero>' + str(vat) + '</Numero>')
-            sb.append('</Identificacion>')
-                
+
+            if inv.tipo_documento == 'FEE' or id_code == '05':
+                if receiver_company.vat:
+                    sb.append('<IdentificacionExtranjero>' + str(receiver_company.vat) + '</IdentificacionExtranjero>')
+            else:
+                sb.append('<Identificacion>')
+                sb.append('<Tipo>' + str(id_code) + '</Tipo>')
+                sb.append('<Numero>' + str(vat) + '</Numero>')
+                sb.append('</Identificacion>')
 
             if inv.tipo_documento != 'FEE':
                 if receiver_company.state_id and \
@@ -468,23 +466,20 @@ def gen_xml_v43(inv, sale_conditions, total_servicio_gravado,
                     sb.append('<Distrito>' + str(receiver_company.district_id.code or '') + '</Distrito>')
 
                     if receiver_company.neighborhood_id and receiver_company.neighborhood_id.code:
-                        neighborhood_value = normalize_neighborhood(
-                            receiver_company.neighborhood_id.name
-                        )
-                        if neighborhood_value:
-                            sb.append(f"<Barrio>{neighborhood_value}</Barrio>")
+                        sb.append('<Barrio>' + str(receiver_company.neighborhood_id.name or '') + '</Barrio>')
+
                     sb.append('<OtrasSenas>' + escape(str(receiver_company.street or 'No disponible')) + '</OtrasSenas>')
                     sb.append('</Ubicacion>')
 
-            if receiver_company.phone:
-                try:
-                    phone = phonenumbers.parse(receiver_company.phone, (receiver_company.country_id.code or 'CR'))
-                    sb.append('<Telefono>')
-                    sb.append('<CodigoPais>' + str(phone.country_code) + '</CodigoPais>')
-                    sb.append('<NumTelefono>' + str(phone.national_number) + '</NumTelefono>')
-                    sb.append('</Telefono>')
-                except:
-                    pass
+                if receiver_company.phone:
+                    try:
+                        phone = phonenumbers.parse(receiver_company.phone, (receiver_company.country_id.code or 'CR'))
+                        sb.append('<Telefono>')
+                        sb.append('<CodigoPais>' + str(phone.country_code) + '</CodigoPais>')
+                        sb.append('<NumTelefono>' + str(phone.national_number) + '</NumTelefono>')
+                        sb.append('</Telefono>')
+                    except:
+                        pass
 
                 re_match = r'^(\s?[^\s,]+@[^\s,]+\.[^\s,]+\s?,)*(\s?[^\s,]+@[^\s,]+\.[^\s,]+)$'
                 match = receiver_company.email and re.match(re_match, receiver_company.email.lower())
@@ -527,15 +522,13 @@ def gen_xml_v43(inv, sale_conditions, total_servicio_gravado,
             if v.get('montoDescuento'):
                 sb.append('<Descuento>')
                 sb.append('<MontoDescuento>' + str(v['montoDescuento']) + '</MontoDescuento>')
-                sb.append('<CodigoDescuento>' + str(v['codigoDescuento']) + '</CodigoDescuento>')
                 if v.get('naturalezaDescuento'):
-                    sb.append('<CodigoDescuentoOTRO>' + str(v['codigoDescuentoOTRO']) + '</CodigoDescuentoOTRO>')
                     sb.append('<NaturalezaDescuento>' + str(v['naturalezaDescuento']) + '</NaturalezaDescuento>')
                 sb.append('</Descuento>')
 
             sb.append('<SubTotal>' + str(v['subtotal']) + '</SubTotal>')
 
-            if inv.tipo_documento not in ['FEE', 'REP']:
+            if inv.tipo_documento != 'FEE' or inv.tipo_documento != 'REP':
                 if v['impuesto'][1]['codigo']=='01' and v['subtotal'] > 0:
                     sb.append('<BaseImponible>' + str(v['subtotal']) + '</BaseImponible>')
                 
@@ -582,10 +575,8 @@ def gen_xml_v43(inv, sale_conditions, total_servicio_gravado,
                             sb.append('</Exoneracion>')
                     sb.append('</Impuesto>')
 
-                if inv.tipo_documento not in ['FEE','FEC','REP']:
-                    sb.append('<ImpuestoAsumidoEmisorFabrica>' + str(0) + '</ImpuestoAsumidoEmisorFabrica>')
-                if inv.tipo_documento != 'FEE':
-                    sb.append('<ImpuestoNeto>' + str(v['impuestoNeto']) + '</ImpuestoNeto>')
+                sb.append('<ImpuestoAsumidoEmisorFabrica>' + str(0) + '</ImpuestoAsumidoEmisorFabrica>')
+                sb.append('<ImpuestoNeto>' + str(v['impuestoNeto']) + '</ImpuestoNeto>')
 
             sb.append('<MontoTotalLinea>' + str(v['montoTotalLinea']) + '</MontoTotalLinea>')
             sb.append('</LineaDetalle>')
@@ -1375,27 +1366,3 @@ def p12_expiration_date(p12file, password):
         return cert.not_valid_after
     except Exception as e:
         raise
-def normalize_neighborhood(name: str) -> str:
-    """
-    Ensures the <Barrio> value meets Hacienda's minLength=5 rule.
-
-    - Empty input  → returns "" (caller should skip the tag).
-    - Length ≤ 4   → prepends 'Barrio ' to reach ≥ 5 characters.
-    - Always XML-escapes the result.
-
-    Parameters
-    ----------
-    name : str
-        The raw neighborhood name from the database.
-
-    Returns
-    -------
-    str
-        A normalized, XML-safe string (or empty if name is falsy).
-    """
-    if not name:
-        return ""
-    name = name.strip()
-    if len(name) < 5:  # 1-4 chars trigger prefix
-        name = f"Barrio {name}"
-    return escape(name)

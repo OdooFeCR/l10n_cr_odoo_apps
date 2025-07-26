@@ -790,16 +790,6 @@ msgstr "Actividades económicas catalogadas por el Ministerio de Hacienda"
 msgid "Economic activity"
 msgstr "Actividad Económica"
 
-
-#. module: cr_electronic_invoice
-#: model:ir.actions.act_window,name:cr_electronic_invoice.action_discount_code
-#: model:ir.model.fields,field_description:cr_electronic_invoice.field_account_move_line__discount_code_id
-#: model:ir.ui.menu,name:cr_electronic_invoice.menu_economic_activity
-#: model_terms:ir.ui.view,arch_db:cr_electronic_invoice.view_discount_code_form
-#: model_terms:ir.ui.view,arch_db:cr_electronic_invoice.view_discount_code_tree
-msgid "Discount Code"
-msgstr "Código Descuento"
-
 #. module: cr_electronic_invoice
 #: model:ir.model.fields,help:cr_electronic_invoice.field_product_category__economic_activity_id
 #: model:ir.model.fields,help:cr_electronic_invoice.field_product_product__economic_activity_id
@@ -2374,14 +2364,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:cr_electronic_invoice.field_account_payment__amount_tax_electronic_invoice
 msgid "Total FE taxes"
 msgstr "Total Impuestos FE"
-
-#. module: cr_electronic_invoice
-#: model:ir.model.fields,field_description:cr_electronic_invoice.field_account_bank_statement_line__amount_discount_electronic_invoice
-#: model:ir.model.fields,field_description:cr_electronic_invoice.field_account_move__amount_discount_electronic_invoice
-#: model:ir.model.fields,field_description:cr_electronic_invoice.field_account_payment__amount_discount_electronic_invoice
-#: model_terms:ir.ui.view,arch_db:cr_electronic_invoice.report_invoice_document
-msgid "Discount Amount"
-msgstr "Monto de descuento"
 
 #. module: cr_electronic_invoice
 #: model:ir.model.fields,field_description:cr_electronic_invoice.field_account_move_line__total_tax

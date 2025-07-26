@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import base64
 import datetime
 import pytz
@@ -22,7 +21,6 @@ _logger = logging.getLogger(__name__)
 
 
 class AccountInvoiceElectronic(models.Model):
-    _description = 'Account Invoice Electronic'
     _inherit = "account.move"
 
     # ==============================================================================================
@@ -134,8 +132,7 @@ class AccountInvoiceElectronic(models.Model):
     )
     payment_methods_id = fields.Many2one(
         comodel_name="payment.methods",
-        string="Payment methods",
-        default='04'
+        string="Payment methods"
     )
     invoice_id = fields.Many2one(
         comodel_name="account.move",
@@ -156,12 +153,7 @@ class AccountInvoiceElectronic(models.Model):
     )
 
     # === Amount fields === #
-    amount_discount_electronic_invoice = fields.Monetary(
-        string='Discount Amount',
-        compute='_compute_amount_discount_electronic_invoice',
-        readonly=True,
-        store=True
-    )
+
     amount_tax_electronic_invoice = fields.Monetary(
         string='Total FE taxes',
         readonly=True
@@ -170,7 +162,6 @@ class AccountInvoiceElectronic(models.Model):
         string='Total FE',
         readonly=True
     )
-   
 
     # === XML fields === #
 
@@ -277,16 +268,6 @@ class AccountInvoiceElectronic(models.Model):
                     subject=_('Warning'),
                     body=error_msg
                 )
-    @api.depends('invoice_line_ids.discount', 'invoice_line_ids.price_unit', 'invoice_line_ids.quantity')
-    def _compute_amount_discount_electronic_invoice(self):
-        for move in self:
-            total_discount = 0.0
-            for line in move.invoice_line_ids:
-                # Calcula el descuento por línea
-                # (precio unitario * cantidad) * (descuento %)
-                discount_amount_line = (line.price_unit * line.quantity) * (line.discount / 100.0)
-                total_discount += discount_amount_line
-            move.amount_discount_electronic_invoice = total_discount
 
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
@@ -1178,23 +1159,15 @@ class AccountInvoiceElectronic(models.Model):
 
                     reference_code_id = inv.reference_code_id
                     if (inv.invoice_id or inv.not_loaded_invoice) and reference_code_id and inv.reference_document_id:
-                        # if inv.invoice_id:
-                        #     if inv.invoice_id.number_electronic and inv.invoice_line_ids[0].product_id:
-                        #         numero_documento_referencia = inv.invoice_id.number_electronic
-                        #         fecha_emision_referencia = inv.invoice_id.date_issuance or inv.invoice_id.invoice_date.strftime("%Y-%m-%d") + "T12:00:00-06:00"
-                        #     else:
-                        #         numero_documento_referencia = inv.invoice_id and \
-                        #             re.sub('[^0-9]+', '', inv.invoice_id.sequence) or re.sub('[^0-9]+', '', inv.invoice_id.name)
-                        #         invoice_date = inv.invoice_id.invoice_date
-                        #         fecha_emision_referencia = invoice_date.strftime("%Y-%m-%d") + "T12:00:00-06:00"
                         if inv.invoice_id:
-                            if not inv.invoice_id.number_electronic:
-                                raise UserError(
-                                    "La factura referenciada no tiene clave electrónica. No se puede generar la nota.")
-
-                            numero_documento_referencia = inv.invoice_id.number_electronic
-                            fecha_emision_referencia = inv.invoice_id.date_issuance or (
-                                    inv.invoice_id.invoice_date.strftime("%Y-%m-%d") + "T12:00:00-06:00")
+                            if inv.invoice_id.number_electronic and inv.invoice_line_ids[0].product_id:
+                                numero_documento_referencia = inv.invoice_id.number_electronic
+                                fecha_emision_referencia = inv.invoice_id.date_issuance or inv.invoice_id.invoice_date.strftime("%Y-%m-%d") + "T12:00:00-06:00"
+                            else:
+                                numero_documento_referencia = inv.invoice_id and \
+                                    re.sub('[^0-9]+', '', inv.invoice_id.sequence) or re.sub('[^0-9]+', '', inv.invoice_id.name)
+                                invoice_date = inv.invoice_id.invoice_date
+                                fecha_emision_referencia = invoice_date.strftime("%Y-%m-%d") + "T12:00:00-06:00"
                         else:
                             numero_documento_referencia = inv.not_loaded_invoice
                             fecha_emision_referencia = inv.not_loaded_invoice_date.strftime("%Y-%m-%d")
@@ -1212,9 +1185,6 @@ class AccountInvoiceElectronic(models.Model):
                     # Validate if invoice currency is the same as the company currency
                     if currency.name == self.company_id.currency_id.name:
                         currency_rate = 1
-                    elif inv.tipo_documento == "NC" and currency.name != self.company_id.currency_id.name:
-                        Original_Currency = (inv.invoice_id.amount_total_signed / inv.invoice_id.amount_total_in_currency_signed)
-                        currency_rate = round(Original_Currency , 5)
                     else:
                         currency_rate = round(1.0 / currency.rate, 5)
 
@@ -1323,23 +1293,14 @@ class AccountInvoiceElectronic(models.Model):
                                 _no_cabys_code = _(f'Warning!.\nLine without CABYS code: {inv_line.name}')
                                 continue
 
-                            # Validación: Deberá incluir al menos 12 dígitos cuando se
-                            # trate de una FEE, NC o ND que modifiquen una FEE y que el
-                            # primer digito del código CABYS sea 0, 1, 2, 3 y 4 (bienes).
-                            if inv.tipo_documento == 'FEE' and inv_line.tariff_head and inv_line.product_id.cabys_product_id.cabys_categoria1_id.codigo in ['0','1','2','3','4']:
+                            if inv.tipo_documento == 'FEE' and inv_line.tariff_head:
                                 line["partidaArancelaria"] = inv_line.tariff_head
 
                             if inv_line.discount and price_unit > 0:
                                 total_descuento += descuento
                                 line["montoDescuento"] = descuento
-                                if inv_line.discount_code_id:
-                                    line["codigoDescuento"] = inv_line.discount_code_id.code
-                                    if inv_line.discount_code_id.code == '99':
-                                        line["codigoDescuentoOTRO"] = inv_line.discount_note
-                                        line["naturalezaDescuento"] = inv_line.discount_code_id.display_name
-                                else:
-                                    raise UserError(_('The discount code is required when apply a discount.'))
-                            
+                                line["naturalezaDescuento"] = inv_line.discount_note or 'Descuento Comercial'
+
                             # Se generan los impuestos
                             taxes = dict([])
                             _line_tax = 0.0
@@ -1413,14 +1374,13 @@ class AccountInvoiceElectronic(models.Model):
                                 line["impuesto"] = taxes
                                 line["impuestoNeto"] = round(_line_tax, 5)
 
-
                             # FE versión 4.4 - Servicios Gravados
                             #    Validación: En caso que en el campo “Código de bien o servicio”
                             #    se utilicen códigos que empiecen con: 5,6,7,8,9 de la Categoría
                             #    1 del CAByS y que este gravado con IVA, deberá de cumplir con
                             #    el cálculo de este campo. Caso contrario rechazará el comprobante.
                             
-                            if inv_line.product_id.type == 'service' or inv_line.product_id.cabys_product_id.cabys_categoria1_id.codigo in ['5','6','7','8','9']:                                
+                            if inv_line.product_id.detailed_type == 'service' or inv_line.product_id.cabys_product_id.cabys_categoria1_id.codigo in ['5','6','7','8','9']:                                
                                 if taxes:
                                     if _tax_exoneration:
                                         if _percentage_exoneration < 1:
@@ -1840,10 +1800,6 @@ class AccountInvoiceElectronic(models.Model):
                 cliente = self.env['res.partner'].create(info)
                 cliente.onchange_vat()
                 self.partner_id = cliente.id
-
-
-
-
 
     # ------------------------------------------------------------
     # MAIL.THREAD

@@ -41,14 +41,6 @@ class InvoiceLineElectronic(models.Model):
     cabys_code = fields.Char(
         related="product_id.cabys_code",
     )
-    discount_code_id = fields.Many2one(
-        comodel_name="discount.code",
-        string="Discount Code",
-        store=True,
-        context={
-            'active_test': False
-        }
-    )
 
     # -------------------------------------------------------------------------
     # ONCHANGE METHODS
