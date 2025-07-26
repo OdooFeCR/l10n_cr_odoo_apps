@@ -1,9 +1,0 @@
-xmlsig
-jsonschema
-PyYAML
-psutil
-image
-jinja2
-html2text
-paramiko
-phonenumbers
