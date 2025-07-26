@@ -1,5 +1,5 @@
 {
-    'name': 'Instalador de FE CR',
+    'name': 'Instalador de FE Costa Rica',
     'version': '17.0.0.0.0',
     'author': 'Singulary',
     'license': 'AGPL-3',

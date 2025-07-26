@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 {
     'name': 'Códigos País para Facturación electrónica Costa Rica',
     'version': '17.0.0.0.0',

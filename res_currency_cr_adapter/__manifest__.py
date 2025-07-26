@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 {
     'name': 'Costa Rica Currency Adapter',
     'version': '17.0.0.0.0',

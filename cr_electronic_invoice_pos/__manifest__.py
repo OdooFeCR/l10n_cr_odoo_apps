@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 {
     'name': 'Facturación electrónica Costa Rica POS',
     'version': '17.0.0.0.0',

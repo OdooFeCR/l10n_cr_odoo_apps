@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Importador de Facturas Electronicas',
-    'version': '17.0.0.0.0',
+    'version': '17.0.0.0.1',
     'category': 'Accounting/Accounting',
     'author': 'Singulary, CR Factura',
     'license': 'AGPL-3',

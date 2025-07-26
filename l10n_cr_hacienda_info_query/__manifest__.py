@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 {
     "name": "Consultar Información de Clientes en Hacienda Costa Rica",
     'version': '17.0.0.0.1',

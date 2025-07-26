@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
-    'name': 'Importador de Facturas de Proveedores',
+    'name': 'Importador de Facturas de Proveedores Costa Rica',
     'version': '17.0.0.0.0',
     'category': 'Vendor Bills',
     'author': 'Singulary',
