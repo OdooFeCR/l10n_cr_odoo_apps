@@ -2,8 +2,8 @@
     'name': "Catálogo de bienes y servicios para uso tributario y Cuentas Nacionales",
 
     'summary': "Catálogo de bienes y servicios para uso tributario y Cuentas Nacionales",
-    'author': 'info@fakturacion.com',
-    'website': "https://github.com/odoocr/cabys",
+    'author': 'info@fakturacion.com | Singulary | Fabian Artavia',
+    'website': "https://github.com/OdooFeCR/FE-CR",
     'category': 'Account',
     'version': '17.0.1.0.0',
     'license': 'AGPL-3',
