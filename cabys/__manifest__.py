@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 {
     'name': "Costa Rica -Catálogo de bienes y servicios para uso tributario y Cuentas Nacionales",
 

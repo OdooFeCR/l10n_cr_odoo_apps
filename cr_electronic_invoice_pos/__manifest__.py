@@ -4,7 +4,9 @@
     'version': '17.0.0.0.0',
     'author': 'Singulary',
     'license': 'AGPL-3',
-    'website': 'https://singulary.online',
+    'price': 0,
+    'currency': 'USD',
+    'website': 'https://github.com/OdooFeCR/FE-CR',
     'category': 'Account',
     'description':
     '''

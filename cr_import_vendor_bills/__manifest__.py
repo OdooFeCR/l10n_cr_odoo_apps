@@ -6,6 +6,8 @@
     'category': 'Vendor Bills',
     'author': 'Singulary',
     'license': 'AGPL-3',
+    'price': 0,
+    'currency': 'USD',
     'website': '',
     'summary': 'Import Vendor Bills from incoming mail server',
 
