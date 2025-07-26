@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_invoice_document" inherit_id="account.report_invoice_document">
+            <xpath expr="//div[@class='page mb-4']" position="before">
+                <style>
+                    .o_report_layout_striped, .page, .row, .col-6, .col-12, body {
+                        font-size: 0.95em !important;
+                    }
+                </style>
+            </xpath>
+            <!-- Elimina el bloque de dirección y datos fiscales original -->
+        <xpath expr="//div[@class='page mb-4']/h2" position="replace">
+           
+        </xpath>      
+        
+        <xpath expr="//div[@class='row'][1]" position="replace">
+          <div class="row m-0">
+                <!-- Información del cliente -->
+                <div class="col-6">
+                    <strong>Cliente:</strong>
+                    <span t-field="o.partner_id.name"/>
+                    <br/>
+                    <strong>Identificación:</strong>
+                    <span t-field="o.partner_id.vat"/>
+                    <br/>
+                    <strong>Dirección:</strong>
+                    <span t-field="o.partner_id.street"/>
+                    <span t-field="o.partner_id.city"/>
+                    <span t-field="o.partner_id.state_id.name"/>
+                    <span t-field="o.partner_id.country_id.name"/>
+                    <br/>
+                    <strong>Teléfono:</strong>
+                    <span t-field="o.partner_id.phone"/>
+                    <br/>
+                    <strong>Email:</strong>
+                    <span t-field="o.partner_id.email"/>
+                    <br/>
+                    <strong>Método de Pago:</strong>
+                    <span t-field="o.payment_methods_id.name"/>
+                    <br/>
+                    <strong>Origen:</strong>
+                    <span t-field="o.invoice_origin"/>
+                    <br/>
+                </div>
+                <div class="col-6">
+                    
+                        <!-- Fecha y demás datos -->
+                        <div class="col-8">
+                            <t t-if="o.move_type == 'out_invoice'"><strong>Fecha de factura:</strong></t>
+                            <t t-elif="o.move_type == 'out_refund'"><strong>Fecha de Nota:</strong></t>
+                            <t t-elif="o.move_type == 'out_receipt'"><strong>Fecha de Tiquete:</strong></t>
+                            <t t-else=""><strong>Fecha:</strong></t>
+                            <span t-field="o.invoice_date"/>
+                            <br/>
+                            <strong>Vencimiento:</strong>
+                            <span t-field="o.invoice_date_due"/>
+                            <br/>
+                            <t t-if="o.ref">
+                                <strong>Referencia:</strong>
+                                <span t-field="o.ref"/>
+                                <br/>
+                            </t>
+                            <strong>Tipo de Documento:</strong>
+                            <span t-field="o.tipo_documento"/>
+                            <br/>
+                            <strong>Número Electrónico:</strong>
+                            <span t-field="o.number_electronic"/>
+                            <br/>
+                            <strong>Consecutivo Electrónico:</strong>
+                            <span t-field="o.sequence"/>
+                            <br/>
+                        </div>
+                    
+                </div>
+            </div>
+        </xpath>
+        <xpath expr="//div[@id='informations']" position="replace">
+            <!-- Eliminado para evitar duplicidad -->
+        </xpath>
+        
+        <xpath expr="//div[@id='qrcode']" position="after">
+            <p>
+                <span>Autorizada mediante resolución N° DGT-R-033-2019 del 20 de junio de 2019.</span>
+                <br/>
+                <span>Comprobante Electrónico Versión 4.4.</span>
+                <br/>
+                <t t-if="o.amount_total_words">
+                <strong>Monto en letras:</strong>
+                <span t-field="o.amount_total_words"/>
+            </t>
+            </p>
+
+            <div id="exoneration" t-if="o.partner_id.has_exoneration">
+                <table class="table table-sm o_main_table" name="invoice_line_table">
+                    <thead>
+                        <tr>
+                            <th>Exoneration Number</th>
+                            <th>Authorization Type</th>
+                            <th>Exoneration Issuer</th>
+                            <th>Issue Date</th>
+                            <th>Expiration Date</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr>
+                            <td>
+                                <span t-field="o.partner_id.exoneration_number"/>
+                            </td>
+                            <td>
+                                <span t-field="o.partner_id.type_exoneration"/>
+                            </td>
+                            <td>
+                                <span t-field="o.partner_id.institution_name"/>
+                            </td>
+                            <td>
+                                <span t-field="o.partner_id.date_issue"/>
+                            </td>
+                            <td>
+                                <span t-field="o.partner_id.date_expiration"/>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- QR en la parte inferior derecha según la estructura de Hacienda (Chris) -->
+            <div class="row mt-3">
+                <div class="col-12">
+                    <div style="text-align: right;">
+                        <div style="display: inline-block;">
+                            <t t-if="o.qr_image">
+                                
+                                <span t-field="o.qr_image" t-options='{"widget": "image"}' style="max-width:120px; max-height:120px;"/>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </template>
+</odoo>
