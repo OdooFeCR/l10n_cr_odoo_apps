@@ -2,10 +2,10 @@
 {
     'name': 'Costa Rica Currency Adapter',
     'version': '17.0.0.0.0',
-    'author': 'Singulary',
+    'author': 'AKUREY S.A., Singulary',
     'license': 'AGPL-3',
     'category': 'Accounting/Accounting',
-    'website': 'https://singulary.online',
+    'website': "https://github.com/OdooFeCR/FE-CR",
     'depends': [
         'base',
         'account'

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Facturación electrónica Costa Rica POS',
-    'version': '17.0.0.0.0',
-    'author': 'Singulary',
+    'version': '17.0.0.0.1',
+    'author': 'Singulary, José Artavia, Fabian Artavia',
     'license': 'AGPL-3',
     'price': 0,
     'currency': 'USD',

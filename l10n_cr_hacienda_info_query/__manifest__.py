@@ -2,9 +2,9 @@
 {
     "name": "Consultar Información de Clientes en Hacienda Costa Rica",
     'version': '17.0.0.0.1',
-    'author': 'Singulary',
+    'author': 'OdooCR, Singulary, José Artavia, Fabian Artavía',
+    'website': "https://github.com/OdooFeCR/FE-CR",
     'license': 'AGPL-3',
-    'website': 'https://singulary.online',
     'category': 'Hidden',
     "summary": """Consultar Nombre de Clientes en Hacienda Costa Rica""",
     "description": """Actualización automática de nombre de clientes a partir del API de Hacienda""",

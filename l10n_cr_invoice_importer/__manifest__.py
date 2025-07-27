@@ -6,7 +6,7 @@
     'category': 'Accounting/Accounting',
     'author': 'Singulary, CR Factura',
     'license': 'AGPL-3',
-    'website': 'https://singulary.online',
+    'website': "https://github.com/OdooFeCR/FE-CR",
     'summary': 'Importador de Facturas Electronicas de Costa Rica',
 
     # any module necessary for this one to work correctly

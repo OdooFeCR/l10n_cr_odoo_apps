@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Facturación electrónica Costa Rica',
-    'version': '17.0.0.0.0',
-    'author': 'Singulary',
+    'version': '17.0.0.0.1',
+    'author': 'OdooCR, Singulary, José Artavia, Fabian Artavía',
+    'website': "https://github.com/OdooFeCR/FE-CR",
     'license': 'AGPL-3',
     'price': 0,
     'currency': 'USD',
-    'website': 'https://github.com/OdooFeCR/FE-CR',
     'category': 'Accounting/Accounting',
     'description':
         '''
