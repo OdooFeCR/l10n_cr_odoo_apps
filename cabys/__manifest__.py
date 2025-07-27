@@ -3,8 +3,9 @@
     'name': "Costa Rica -Catálogo de bienes y servicios para uso tributario y Cuentas Nacionales",
 
     'summary': "Catálogo de bienes y servicios para uso tributario y Cuentas Nacionales",
-    'author': 'info@fakturacion.com | Singulary | Fabian Artavia',
+    'author': 'OdooCR',
     'website': "https://github.com/OdooFeCR/FE-CR",
+    'maintainer':"Singulary, José Artavia, Fabian Artavía",
     'category': 'Account',
     'version': '17.0.1.0.0',
     'license': 'AGPL-3',
